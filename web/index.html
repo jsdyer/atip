@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Search completed Canadian federal access to information requests, find released records, and draft a new request.">
+  <meta name="theme-color" content="#173d32">
+  <title>ATIP Records Explorer</title>
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+<header class="topbar"><div class="wrap top-inner">
+  <a href="./" class="brand"><span class="brand-icon" aria-hidden="true"></span> ATIP Records Explorer</a>
+  <nav aria-label="Tools"><button id="saved" class="ghost" type="button" aria-pressed="false">Saved records <span id="saved-count">0</span></button><button id="draft" class="primary" type="button">Draft a new request</button></nav>
+</div></header>
+<main>
+  <section class="hero"><div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow">CANADIAN FEDERAL ACCESS TO INFORMATION</p>
+      <h1>Find what’s already<br class="wide"> been requested.</h1>
+      <p class="hero-copy">Search access to information summaries, request a copy of a release, or write a new request for the records you still need.</p>
+    </div>
+    <aside class="coverage" aria-label="Dataset coverage">
+      <p class="eyebrow">DATASET SNAPSHOT</p>
+      <p><strong id="dataset-count">—</strong> completed requests</p>
+      <p><strong id="dataset-orgs">—</strong> institutions</p>
+      <p id="dataset-dates">Loading coverage…</p>
+      <a href="https://open.canada.ca/data/dataset/0797e893-751e-4695-8229-a5066e4fe43c" target="_blank" rel="noopener">Government of Canada dataset ↗</a>
+    </aside>
+  </div></section>
+  <div class="wrap workbench">
+    <section class="search-box" aria-label="Search records">
+      <form id="search-form" role="search">
+        <label for="query">Search summaries or request numbers</label>
+        <div class="input-row"><span class="search-icon" aria-hidden="true"></span><input id="query" type="search" placeholder='Try Shag Harbour, “real-time rail”, or A-2017-00532' autocomplete="off" spellcheck="false" maxlength="240" aria-describedby="search-help"><button id="clear-query" type="button" class="ghost" hidden>Clear</button></div>
+      </form>
+      <p id="search-help" class="muted hint">Use quotes for a phrase. Search includes English and French summaries.</p>
+      <div id="suggestions" class="suggestions" aria-label="Suggested searches"></div>
+    </section>
+    <section class="filters" aria-label="Filter results">
+      <label>Institution<select id="institution"><option value="">All institutions</option></select></label>
+      <label>Completion year<select id="year"><option value="">All years</option></select></label>
+      <label>Outcome<select id="disposition"><option value="">All outcomes</option></select></label>
+      <label>Search language<select id="language"><option value="">English + French</option><option value="en">English</option><option value="fr">French</option></select></label>
+      <button id="reset-filters" class="ghost" type="button" hidden>Reset filters</button>
+    </section>
+    <div class="workspace-grid">
+      <section class="results" id="results" aria-label="Search results">
+        <div class="result-head"><div><p class="eyebrow" id="result-kicker">COMPLETED REQUESTS</p><h2 id="result-title" tabindex="-1">Explore records</h2><p id="count" role="status" aria-live="polite">Loading the search index…</p></div><label id="sort-label">Sort by<select id="sort"><option value="relevance">Relevance</option><option value="newest">Newest</option><option value="pages">Most pages</option></select></label></div>
+        <div id="result-list"></div>
+        <nav id="pagination" aria-label="Result pages" hidden><button id="previous" type="button" class="ghost">← Previous</button><span id="page-info"></span><button id="next" type="button" class="ghost">Next →</button></nav>
+      </section>
+      <aside class="sidebar">
+        <section class="side-panel"><p class="eyebrow">HOW TO GET THE RECORDS</p><h2>Found a match?</h2><p>Open the summary and choose <strong>Request a copy</strong> to find the official form or get a note you can send to the institution. Previously released packages can be requested for free.</p><hr><h2>Need something else?</h2><p>Give the institution a subject, a date range, and the types of records you want. Start with the terms you searched for.</p><button id="side-draft" class="secondary" type="button">Draft a new request →</button></section>
+        <section class="side-panel compact"><h2>What’s covered</h2><p>This snapshot contains completed federal request summaries. Some institutions publish separately, and certain requests are excluded. No match here leaves open the possibility of other records.</p><a href="https://search.open.canada.ca/ati/" target="_blank" rel="noopener">Search the live government portal ↗</a></section>
+      </aside>
+    </div>
+  </div>
+</main>
+<footer class="footer"><div class="wrap"><strong>ATIP Records Explorer</strong><p>Independent research tool. Source: Treasury Board of Canada Secretariat. Contains information licensed under the <a href="https://open.canada.ca/en/open-government-licence-canada/" target="_blank" rel="noopener">Open Government Licence – Canada</a>.</p><a href="https://github.com/jsdyer/atip" target="_blank" rel="noopener">Source code ↗</a></div></footer>
+<dialog id="record-dialog" aria-labelledby="record-heading">
+  <div class="record-top"><div><p class="eyebrow" id="record-org"></p><h2 id="record-heading"></h2></div><form method="dialog"><button class="ghost" aria-label="Close record">Close</button></form></div>
+  <p id="record-meta" class="muted"></p>
+  <div id="record-text"></div>
+  <div id="record-actions" class="record-actions"></div>
+  <p id="record-status" role="status" class="muted"></p>
+</dialog>
+<noscript><div class="wrap">Enable JavaScript to search this snapshot, or <a href="https://search.open.canada.ca/ati/">use the official Open Government search</a>.</div></noscript>
+</body>
+</html>
