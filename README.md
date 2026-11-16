@@ -10,6 +10,12 @@ Search the Government of Canada's completed access to information request summar
 
 The initial deployment was built from the supplied November 2026 snapshot. It contains **206,127 summaries across 190 federal institutions**, with reported completion years **2011–2026**. The source file SHA-256 is `0213ac2d6264280917b19a269ddedb9b86b435f168a89ce9471f4e0ca52e9fdb`.
 
+## Use online with GitHub Pages
+
+Open [Settings → Pages](https://github.com/jsdyer/atip/settings/pages), select **GitHub Actions** as the source, then go to [Actions](https://github.com/jsdyer/atip/actions/workflows/pages.yml) and run **Publish ATIP Explorer to GitHub Pages** on `main`.
+
+The workflow downloads the current official CSV, builds the static app, and publishes it to the Pages URL shown by the deployment. Visitors only need a browser. Future pushes to the app or build files redeploy it. Run the workflow manually to refresh the government snapshot at any time.
+
 ## Build or refresh
 
 Use Python 3 and a recent browser with Web Workers and `DecompressionStream`. The runtime is static HTML, CSS, and JavaScript. The build converts the CSV to compressed data files and copies the app into `dist/`.
