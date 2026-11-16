@@ -14,7 +14,20 @@ The initial deployment was built from the supplied November 2026 snapshot. It co
 
 Open [Settings → Pages](https://github.com/jsdyer/atip/settings/pages), select **GitHub Actions** as the source, then go to [Actions](https://github.com/jsdyer/atip/actions/workflows/pages.yml) and run **Publish ATIP Explorer to GitHub Pages** on `main`.
 
-The workflow downloads the current official CSV, builds the static app, and publishes it to the Pages URL shown by the deployment. Visitors only need a browser. Future pushes to the app or build files redeploy it. Run the workflow manually to refresh the government snapshot at any time.
+The workflow downloads the current official CSV, builds the static app, and publishes the generated site and dataset to GitHub Pages. Visitors only need a browser.
+
+### Automatic daily data refresh
+
+- **Scheduled refresh:** Every day at **10:23 UTC** (2:23 a.m. PST / 3:23 a.m. PDT in Vancouver) via the GitHub Actions `schedule` trigger. GitHub runs scheduled workflows on a best-effort basis; the exact start time may vary.
+- **Manual refresh:** Open [Publish ATIP Explorer to GitHub Pages](https://github.com/jsdyer/atip/actions/workflows/pages.yml) and select **Run workflow** on `main`.
+- **Code-triggered refresh:** Pushes affecting `web/**`, `scripts/build.py`, or `.github/workflows/pages.yml` also rebuild and redeploy the site.
+- **If a refresh fails:** The deployment job will not run, so the last successful published snapshot remains available.
+
+### Where the data is stored
+
+The raw `ati-all.csv` is downloaded temporarily during the GitHub Actions build; it is **not committed to this source repository**. The build converts it into compressed JSON shards under `dist/data/`, and publishes those files as part of the **GitHub Pages deployment artifact**. They are publicly served from `https://coolcode.ca/atip/data/` and downloaded by each visitor's browser for local, instant searching.
+
+View the [currently published data manifest](https://coolcode.ca/atip/data/manifest.json) to see the record count, date coverage, source CSV SHA-256, shard filenames, and (after the updated build is deployed) the `generatedAtUtc` timestamp. **This timestamp is the build time, not proof that the government's underlying records changed that day.**
 
 ## Build or refresh
 
