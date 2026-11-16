@@ -8,6 +8,9 @@ on:
       - 'scripts/build.py'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
+  schedule:
+    # Daily at 10:23 UTC (02:23 PST / 03:23 PDT in Vancouver).
+    - cron: '23 10 * * *'
 
 permissions:
   contents: read
