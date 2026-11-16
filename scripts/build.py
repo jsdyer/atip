@@ -9,6 +9,7 @@ import json
 import shutil
 import sys
 from collections import Counter, defaultdict
+from datetime import datetime, timezone
 from pathlib import Path
 
 
@@ -134,6 +135,7 @@ def build(source, output):
         "institutions": institutions,
         "dispositions": sorted(dispositions),
         "sourceFile": source.name,
+        "generatedAtUtc": datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z"),
         "sourceSha256": source_digest(source),
         "shards": shards,
     }
