@@ -122,3 +122,12 @@ dialog::backdrop { background: #14271fc2; }
   #sort-label { flex-basis: 103px; }
   .sidebar { grid-template-columns: 1fr; }
 }
+
+.advanced-filters { margin: -10px 0 22px; }
+.advanced-filters summary { cursor: pointer; color: var(--ink); font-size: .85rem; font-weight: 750; }
+.advanced-filters .filters { padding: 12px 0 4px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+#institution-facets { margin: 0 0 14px; }
+#institution-facets:empty { display: none; }
+@media (max-width: 700px) {
+  .advanced-filters .filters { grid-template-columns: 1fr; }
+}

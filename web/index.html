@@ -35,7 +35,7 @@
         <label for="query">Search summaries or request numbers</label>
         <div class="input-row"><span class="search-icon" aria-hidden="true"></span><input id="query" type="search" placeholder='Try Shag Harbour, “real-time rail”, or A-2017-00532' autocomplete="off" spellcheck="false" maxlength="240" aria-describedby="search-help"><button id="clear-query" type="button" class="ghost" hidden>Clear</button></div>
       </form>
-      <p id="search-help" class="muted hint">Use quotes for a phrase. Search includes English and French summaries.</p>
+      <p id="search-help" class="muted hint">Use quotes for a phrase and a minus sign to exclude a word. Search includes English and French summaries.</p>
       <div id="suggestions" class="suggestions" aria-label="Suggested searches"></div>
     </section>
     <section class="filters" aria-label="Filter results">
@@ -45,9 +45,19 @@
       <label>Search language<select id="language"><option value="">English + French</option><option value="en">English</option><option value="fr">French</option></select></label>
       <button id="reset-filters" class="ghost" type="button" hidden>Reset filters</button>
     </section>
+    <details class="advanced-filters">
+      <summary>More filters</summary>
+      <div class="filters">
+        <label>Completed from<select id="fromYear"><option value="">Earliest year</option></select></label>
+        <label>Completed through<select id="toYear"><option value="">Latest year</option></select></label>
+        <label>Available outcome<select id="releasedOnly"><option value="">All outcomes</option><option value="1">All or partly disclosed</option></select></label>
+      </div>
+      <p class="muted hint">The date range and exact completion year both apply when selected.</p>
+    </details>
     <div class="workspace-grid">
       <section class="results" id="results" aria-label="Search results">
         <div class="result-head"><div><p class="eyebrow" id="result-kicker">COMPLETED REQUESTS</p><h2 id="result-title" tabindex="-1">Explore records</h2><p id="count" role="status" aria-live="polite">Loading the search index…</p></div><label id="sort-label">Sort by<select id="sort"><option value="relevance">Relevance</option><option value="newest">Newest</option><option value="pages">Most pages</option></select></label></div>
+        <div id="institution-facets" class="suggestions" aria-label="Institutions in matching results"></div>
         <div id="result-list"></div>
         <nav id="pagination" aria-label="Result pages" hidden><button id="previous" type="button" class="ghost">← Previous</button><span id="page-info"></span><button id="next" type="button" class="ghost">Next →</button></nav>
       </section>

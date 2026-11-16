@@ -2,7 +2,7 @@ import { openDraft, draftExisting } from "./draft.js";
 
 const $ = id => document.getElementById(id);
 const query = $("query");
-const filterIds = ["institution", "year", "disposition", "language"];
+const filterIds = ["institution", "year", "disposition", "language", "fromYear", "toYear", "releasedOnly"];
 const pageSize = 15;
 const dates = new Intl.DateTimeFormat("en-CA", { month: "short", year: "numeric", timeZone: "UTC" });
 const number = new Intl.NumberFormat("en-CA");
@@ -29,6 +29,7 @@ let hasLoaded = false;
 let initialFilters = new URLSearchParams(location.hash.slice(1));
 let pendingRecord = initialFilters.get("record");
 let results = { rows: [], total: 0, suggestions: [] };
+let institutionTitles = new Map();
 
 function element(tag, text, className) {
   const node = document.createElement(tag);
@@ -258,6 +259,18 @@ function renderResults() {
   $("result-kicker").textContent = showingSaved ? "RESEARCH SHORTLIST" : "COMPLETED REQUESTS";
   $("result-title").textContent = showingSaved ? "Saved records" : (query.value.trim() ? "Search results" : "Browse the archive");
   $("sort-label").hidden = showingSaved;
+  const facets = $("institution-facets");
+  facets.replaceChildren();
+  if (!showingSaved && query.value.trim() && !$("institution").value && results.facets?.institutions?.length) {
+    facets.append(element("span", "Matching institutions", "suggest-label"));
+    for (const [slug, count] of results.facets.institutions.slice(0, 6)) {
+      const title = institutionTitles.get(slug) || slug;
+      facets.append(button(`${title} (${number.format(count)})`, () => {
+        $("institution").value = slug;
+        scheduleSearch();
+      }, "chip"));
+    }
+  }
   if (showingSaved) {
     $("count").textContent = `${number.format(items.length)} saved in this browser`;
   } else {
@@ -305,6 +318,13 @@ function serializeSearch() {
 function sendSearch() {
   if (showingSaved || !worker) return;
   const filters = Object.fromEntries(filterIds.map(id => [id, $(id).value]));
+  if (filters.fromYear && filters.toYear && Number(filters.fromYear) > Number(filters.toYear)) {
+    results = { rows: [], total: 0, suggestions: [] };
+    renderResults();
+    $("count").textContent = "Choose a start year that is no later than the end year.";
+    $("result-list").replaceChildren();
+    return;
+  }
   $("count").textContent = hasLoaded ? "Searching…" : "Loading the searchable snapshot…";
   worker.postMessage({ type: "search", id: ++latestRequest, query: query.value.trim(), filters, sort: $("sort").value, page, limit: pageSize });
 }
@@ -332,13 +352,17 @@ function configure(meta) {
   $("dataset-orgs").textContent = number.format(distinct.size);
   $("dataset-dates").textContent = `Completion years ${meta.minYear}–${meta.maxYear}`;
   const institutions = [...distinct.values()].sort((a, b) => a[1].localeCompare(b[1], "en-CA"));
+  institutionTitles = new Map(institutions.map(([slug, title]) => [slug, title]));
   for (const [slug, title] of institutions) option($("institution"), slug, title);
-  for (let year = meta.maxYear; year >= meta.minYear; year--) option($("year"), year, year);
+  for (let year = meta.maxYear; year >= meta.minYear; year--) {
+    for (const id of ["year", "fromYear", "toYear"]) option($(id), year, year);
+  }
   for (const code of meta.dispositions) option($("disposition"), code, outcomes[code] || code);
   for (const id of [...filterIds, "sort"]) {
     const item = initialFilters.get(id);
     if (item && [...$(id).options].some(o => o.value === item)) $(id).value = item;
   }
+  if (filterIds.slice(-3).some(id => $(id).value)) document.querySelector(".advanced-filters").open = true;
   initialFilters = new URLSearchParams();
   $("reset-filters").hidden = filterIds.every(id => !$(id).value);
   sendSearch();
