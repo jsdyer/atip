@@ -351,6 +351,9 @@ function configure(meta) {
   for (const item of meta.institutions) if (!distinct.has(item[0])) distinct.set(item[0], item);
   $("dataset-orgs").textContent = number.format(distinct.size);
   $("dataset-dates").textContent = `Completion years ${meta.minYear}–${meta.maxYear}`;
+  const generated = $("dataset-generated");
+  generated.hidden = !meta.generatedAtUtc;
+  if (meta.generatedAtUtc) generated.textContent = `Snapshot generated ${meta.generatedAtUtc.slice(0, 10)} UTC`;
   const institutions = [...distinct.values()].sort((a, b) => a[1].localeCompare(b[1], "en-CA"));
   institutionTitles = new Map(institutions.map(([slug, title]) => [slug, title]));
   for (const [slug, title] of institutions) option($("institution"), slug, title);

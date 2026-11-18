@@ -27,7 +27,7 @@ The workflow downloads the current official CSV, builds the static app, and publ
 
 The raw `ati-all.csv` is downloaded temporarily during the GitHub Actions build; it is **not committed to this source repository**. The build converts it into compressed JSON shards under `dist/data/`, and publishes those files as part of the **GitHub Pages deployment artifact**. They are publicly served from `https://coolcode.ca/atip/data/` and downloaded by each visitor's browser for local, instant searching.
 
-View the [currently published data manifest](https://coolcode.ca/atip/data/manifest.json) to see the record count, date coverage, source CSV SHA-256, shard filenames, and (after the updated build is deployed) the `generatedAtUtc` timestamp. **This timestamp is the build time, not proof that the government's underlying records changed that day.**
+The coverage panel shows the completion years and the UTC date when this search snapshot was generated. The [published manifest](https://coolcode.ca/atip/data/manifest.json) gives the full timestamp, record count, coverage, source CSV SHA-256 and shard filenames.
 
 ## Build or refresh
 
