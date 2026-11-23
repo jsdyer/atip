@@ -1,3 +1,4 @@
+import { readMigrated } from "./storage.mjs";
 import { openDraft, draftExisting } from "./draft.js";
 import { summariesCSV } from "./export.mjs";
 
@@ -125,7 +126,7 @@ function excerpt(row) {
 
 function readSaved() {
   try {
-    const stored = JSON.parse(localStorage.getItem("atip-saved-v1") || "[]");
+    const stored = JSON.parse(readMigrated(localStorage, "coolcode:atip:saved-v1", "atip-saved-v1") || "[]");
     return Array.isArray(stored) ? stored.filter(x => x && typeof x.request_number === "string") : [];
   } catch { return []; }
 }
@@ -139,7 +140,7 @@ function toggleSaved(row) {
   const key = recordKey(row);
   const exists = saved.some(item => recordKey(item) === key);
   saved = exists ? saved.filter(item => recordKey(item) !== key) : [...saved, row];
-  try { localStorage.setItem("atip-saved-v1", JSON.stringify(saved)); }
+  try { localStorage.setItem("coolcode:atip:saved-v1", JSON.stringify(saved)); }
   catch { $("count").textContent = "Saved in this tab. Browser storage is unavailable."; }
   updateSavedCount();
   if (showingSaved) renderResults();

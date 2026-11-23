@@ -61,3 +61,7 @@ Search completed federal ATIP summaries by keyword and institution, save useful 
 ## Added browser workflow
 
 Search completed federal ATIP summaries by keyword and institution, save useful records, then export the current result page or your saved shortlist as CSV. The export includes both languages, official record links and the snapshot date; it is not the full result set unless you have saved every match.
+
+## Saved preference compatibility
+
+Saved requests now use coolcode:atip:saved-v1. The first successful storage write copies the previous atip-saved-v1 value before removing its old key; a failed write leaves the saved requests available under the original key.

@@ -1,0 +1,24 @@
+{
+  "id": "atip",
+  "title": "ATIP Records Explorer",
+  "description": "Find released records, request copies, or draft an access request.",
+  "category": "explorers",
+  "tags": [
+    "foi",
+    "freedom",
+    "of",
+    "information",
+    "open",
+    "government"
+  ],
+  "icon": "files",
+  "url": "/atip/",
+  "source": "https://github.com/jsdyer/atip",
+  "hosting": "project",
+  "access": "browser",
+  "data_info": {
+    "mode": "snapshot",
+    "detail": "Federal departments publish summaries of completed access-to-information requests in English and French.",
+    "cadence": "Daily"
+  }
+}

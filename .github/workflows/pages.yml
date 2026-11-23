@@ -37,7 +37,7 @@ jobs:
           test -s dist/data/manifest.json
       - name: Test application logic
         run: node --test tests/*.test.mjs
-      - uses: actions/upload-pages-artifact@v4
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: dist
 
@@ -54,4 +54,4 @@ jobs:
     steps:
       - name: Publish GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
