@@ -1,4 +1,5 @@
 import { openDraft, draftExisting } from "./draft.js";
+import { summariesCSV } from "./export.mjs";
 
 const $ = id => document.getElementById(id);
 const query = $("query");
@@ -30,6 +31,7 @@ let initialFilters = new URLSearchParams(location.hash.slice(1));
 let pendingRecord = initialFilters.get("record");
 let results = { rows: [], total: 0, suggestions: [] };
 let institutionTitles = new Map();
+let snapshotDate = '';
 
 function element(tag, text, className) {
   const node = document.createElement(tag);
@@ -256,6 +258,8 @@ function renderSuggestions(extra = []) {
 
 function renderResults() {
   const items = showingSaved ? [...saved].reverse() : results.rows;
+  $("export-summaries").disabled = !items.length;
+  $("export-summaries").textContent = showingSaved ? "Export saved summaries CSV" : "Export this page CSV";
   $("result-kicker").textContent = showingSaved ? "RESEARCH SHORTLIST" : "COMPLETED REQUESTS";
   $("result-title").textContent = showingSaved ? "Saved records" : (query.value.trim() ? "Search results" : "Browse the archive");
   $("sort-label").hidden = showingSaved;
@@ -346,6 +350,7 @@ function option(select, value, label) {
 }
 
 function configure(meta) {
+  snapshotDate = meta.generatedAtUtc || '';
   $("dataset-count").textContent = number.format(meta.total);
   const distinct = new Map();
   for (const item of meta.institutions) if (!distinct.has(item[0])) distinct.set(item[0], item);
@@ -392,6 +397,13 @@ $("saved").addEventListener("click", () => setSavedView(!showingSaved));
 $("previous").addEventListener("click", () => { if (page > 1) { page--; scheduleSearch(true); $("result-title").focus(); } });
 $("next").addEventListener("click", () => { if (page * pageSize < results.total) { page++; scheduleSearch(true); $("result-title").focus(); } });
 $("record-dialog").addEventListener("close", () => { activeRecord = null; });
+$("export-summaries").addEventListener("click", () => {
+  const rows = showingSaved ? [...saved].reverse() : results.rows;
+  if (!rows.length) return;
+  const href = URL.createObjectURL(new Blob([summariesCSV(rows, snapshotDate)], {type:'text/csv;charset=utf-8'}));
+  Object.assign(document.createElement('a'), {href,download:showingSaved ? 'atip-saved-summaries.csv' : 'atip-results-page-' + page + '.csv'}).click();
+  setTimeout(() => URL.revokeObjectURL(href), 1000);
+});
 updateSavedCount();
 renderSuggestions();
 

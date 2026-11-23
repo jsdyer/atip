@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'web/**'
+      - 'tests/**'
       - 'scripts/build.py'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
@@ -34,6 +35,8 @@ jobs:
           python3 scripts/build.py "$RUNNER_TEMP/ati-all.csv"
           test -s dist/index.html
           test -s dist/data/manifest.json
+      - name: Test application logic
+        run: node --test tests/*.test.mjs
       - uses: actions/upload-pages-artifact@v4
         with:
           path: dist

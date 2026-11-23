@@ -51,3 +51,13 @@ The dataset excludes certain requests involving personal or third-party propriet
 - [Make a new federal request](https://www.canada.ca/en/treasury-board-secretariat/services/access-information-privacy/access-information/request-information/make-request.html)
 
 Source data published by the Treasury Board of Canada Secretariat. Contains information licensed under the [Open Government Licence – Canada](https://open.canada.ca/en/open-government-licence-canada/).
+
+
+<!-- coolcode:guide -->
+Search completed federal ATIP summaries by keyword and institution, save useful records, then export the current result page or your saved shortlist as CSV. The export includes both languages, official record links and the snapshot date; it is not the full result set unless you have saved every match.
+<!-- /coolcode:guide -->
+
+
+## Added browser workflow
+
+Search completed federal ATIP summaries by keyword and institution, save useful records, then export the current result page or your saved shortlist as CSV. The export includes both languages, official record links and the snapshot date; it is not the full result set unless you have saved every match.
