@@ -6,7 +6,8 @@ on:
     paths:
       - 'web/**'
       - 'tests/**'
-      - 'scripts/build.py'
+      - 'scripts/**'
+      - 'tool.json'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
   schedule:
@@ -37,6 +38,8 @@ jobs:
           test -s dist/data/manifest.json
       - name: Test application logic
         run: node --test tests/*.test.mjs
+      - name: Test snapshot metadata
+        run: python3 -m unittest discover -s tests -v
       - uses: actions/upload-pages-artifact@v5
         with:
           path: dist

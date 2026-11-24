@@ -8,10 +8,13 @@ import hashlib
 import json
 import shutil
 import sys
+from html import escape
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 
+
+from search_metadata import add_search_metadata
 
 ROOT = Path(__file__).resolve().parents[1]
 COLUMNS = {
@@ -30,6 +33,26 @@ def source_digest(path):
         for block in iter(lambda: stream.read(1024 * 1024), b""):
             digest.update(block)
     return digest.hexdigest()
+
+
+def dataset_metadata(metadata):
+    url = "https://coolcode.ca/atip/"
+    return {
+        "@type": "Dataset", "@id": url + "#dataset", "url": url,
+        "name": "Completed federal access to information request summaries",
+        "description": f"Searchable bilingual snapshot of {metadata['total']:,} completed federal request summaries, covering {metadata['minDate']} through {metadata['maxDate']}. These are summaries, not the released document packages.",
+        "creator": {"@type": "Organization", "name": "Treasury Board of Canada Secretariat"},
+        "publisher": {"@type": "Organization", "name": "CoolCode", "url": "https://coolcode.ca/"},
+        "isBasedOn": "https://open.canada.ca/data/dataset/0797e893-751e-4695-8229-a5066e4fe43c",
+        "license": "https://open.canada.ca/en/open-government-licence-canada/",
+        "spatialCoverage": "Canada", "inLanguage": ["en", "fr"],
+        "temporalCoverage": metadata["minDate"] + "/" + metadata["maxDate"],
+        # This is the creation of our snapshot, not the source's modification date.
+        "dateCreated": metadata["generatedAtUtc"],
+        "distribution": [{"@type": "DataDownload", "name": shard["file"],
+                          "contentUrl": url + "data/" + shard["file"], "encodingFormat": "application/gzip"}
+                         for shard in metadata["shards"]],
+    }
 
 
 def title_parts(title):
@@ -140,6 +163,19 @@ def build(source, output):
         "shards": shards,
     }
     (data / "manifest.json").write_bytes(json_bytes(metadata) + b"\n")
+    index = output / "index.html"
+    page = index.read_text(encoding="utf-8")
+    dataset = dataset_metadata(metadata)
+    links = " · ".join(f'<a href="./data/{escape(s["file"], quote=True)}">{escape(s["file"])}</a>' for s in shards)
+    summary = (f'<section class="wrap" id="dataset"><h2>Download the search snapshot</h2>'
+               f'<p>{escape(dataset["description"])}</p>'
+               f'<p>Snapshot prepared <time datetime="{escape(metadata["generatedAtUtc"], quote=True)}">{escape(metadata["generatedAtUtc"])}</time>. '
+               'This is the snapshot preparation time, not the date every source record changed.</p>'
+               '<p><a href="./data/manifest.json">Snapshot manifest, field coverage and source checksum</a>. '
+               f'Compressed JSON files: {links}.</p></section>')
+    page = page.replace("{{DATASET_SUMMARY}}", summary)
+    tool = json.loads((ROOT / "tool.json").read_text())
+    index.write_text(add_search_metadata(page, tool, category="ReferenceApplication", datasets=[dataset]), encoding="utf-8")
     mb = sum(shard["bytes"] for shard in shards) / 1024**2
     print(f"{metadata['total']:,} records, {len(set(org[0] for org in institutions))} institutions, "
           f"{len(shards)} shards, {mb:.1f} MiB compressed.")
