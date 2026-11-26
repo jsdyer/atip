@@ -10,6 +10,8 @@ Search the Government of Canada's completed access to information request summar
 
 The initial deployment was built from the supplied November 2026 snapshot. It contains **206,127 summaries across 190 federal institutions**, with reported completion years **2011–2026**. The source file SHA-256 is `0213ac2d6264280917b19a269ddedb9b86b435f168a89ce9471f4e0ca52e9fdb`.
 
+The [institution directory](https://coolcode.ca/atip/institutions/) groups the same published rows by institution code, calendar year of completion and disclosure outcome. A profile needs records from two distinct months. Counts describe the published file and can differ from annual departmental intake statistics. The daily build writes the profiles and their sitemap alongside the search shards.
+
 ## Use online with GitHub Pages
 
 Open [Settings → Pages](https://github.com/jsdyer/atip/settings/pages), select **GitHub Actions** as the source, then go to [Actions](https://github.com/jsdyer/atip/actions/workflows/pages.yml) and run **Publish ATIP Explorer to GitHub Pages** on `main`.

@@ -14,6 +14,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 
+from institution_pages import publish_institutions
 from search_metadata import add_search_metadata
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -175,6 +176,9 @@ def build(source, output):
                f'Compressed JSON files: {links}.</p></section>')
     page = page.replace("{{DATASET_SUMMARY}}", summary)
     tool = json.loads((ROOT / "tool.json").read_text())
+    has_profiles = publish_institutions(output, tool, metadata, groups)
+    browse = '<p><a href="./institutions/">Browse completed request histories by federal institution</a></p>' if has_profiles else ""
+    page = page.replace("{{INSTITUTION_DIRECTORY}}", browse)
     index.write_text(add_search_metadata(page, tool, category="ReferenceApplication", datasets=[dataset]), encoding="utf-8")
     mb = sum(shard["bytes"] for shard in shards) / 1024**2
     print(f"{metadata['total']:,} records, {len(set(org[0] for org in institutions))} institutions, "
