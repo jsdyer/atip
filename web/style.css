@@ -48,6 +48,8 @@ h2 { font-family: var(--serif); font-size: 1.7rem; font-weight: 500; }
 h1 { font-family: var(--serif); font-size: clamp(2.65rem, 6vw, 5.35rem); font-weight: 400; letter-spacing: -.062em; line-height: .98; }
 .hero-copy { margin: 1rem 0 0; max-width: 570px; color: #e2eae2; font-size: 1.05rem; }
 .coverage { padding: 1rem 1.2rem; border: 1px solid #749484; background: #193c33; border-radius: 9px; }
+.coverage summary { cursor: pointer; font-weight: 650; }
+.coverage[open] summary { margin-bottom: .55rem; }
 .coverage p { margin-bottom: .35rem; }
 .coverage strong { font-size: 1.15rem; font-variant-numeric: tabular-nums; margin-right: .2rem; }
 .coverage a { color: #d1e5d7; font-size: .85rem; }

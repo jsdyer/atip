@@ -4,6 +4,7 @@ import { summariesCSV } from "./export.mjs";
 
 const $ = id => document.getElementById(id);
 const query = $("query");
+$("coverage").open = window.matchMedia("(min-width: 651px)").matches;
 const filterIds = ["institution", "year", "disposition", "language", "fromYear", "toYear", "releasedOnly"];
 const pageSize = 15;
 const dates = new Intl.DateTimeFormat("en-CA", { month: "short", year: "numeric", timeZone: "UTC" });
@@ -251,8 +252,7 @@ function renderSuggestions(extra = []) {
   for (const option of options) {
     $("suggestions").append(button(option, () => {
       query.value = option;
-      query.focus();
-      scheduleSearch();
+      showSearchResults();
     }, "chip"));
   }
 }
@@ -334,6 +334,14 @@ function sendSearch() {
   worker.postMessage({ type: "search", id: ++latestRequest, query: query.value.trim(), filters, sort: $("sort").value, page, limit: pageSize });
 }
 
+function showSearchResults() {
+  scheduleSearch();
+  const heading = $("result-title");
+  heading.textContent = query.value.trim() ? "Search results" : "Browse the archive";
+  heading.focus({preventScroll: true});
+  heading.scrollIntoView({block: "start"});
+}
+
 function scheduleSearch(keepPage = false) {
   clearTimeout(timer);
   if (!keepPage) page = 1;
@@ -388,7 +396,7 @@ function searchError(message) {
 query.value = (initialFilters.get("q") || "").slice(0, 240);
 $("clear-query").hidden = !query.value;
 query.addEventListener("input", () => { pendingRecord = null; scheduleSearch(); });
-$("search-form").addEventListener("submit", event => { event.preventDefault(); scheduleSearch(); });
+$("search-form").addEventListener("submit", event => { event.preventDefault(); showSearchResults(); });
 $("clear-query").addEventListener("click", () => { query.value = ""; query.focus(); scheduleSearch(); });
 for (const id of [...filterIds, "sort"]) $(id).addEventListener("change", () => scheduleSearch());
 $("reset-filters").addEventListener("click", () => { for (const id of filterIds) $(id).value = ""; scheduleSearch(); });

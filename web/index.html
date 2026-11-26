@@ -20,22 +20,22 @@
     <div>
       <p class="eyebrow">CANADIAN FEDERAL ACCESS TO INFORMATION</p>
       <h1>Find what’s already<br class="wide"> been requested.</h1>
-      <p class="hero-copy">Search access to information summaries, request a copy of a release, or write a new request for the records you still need.</p>
+      <p class="hero-copy">Search completed federal requests by topic or request number. Open a summary to see what was released and how to request a copy.</p>
     </div>
-    <aside class="coverage" aria-label="Dataset coverage">
-      <p class="eyebrow">DATASET SNAPSHOT</p>
+    <details class="coverage" id="coverage">
+      <summary>Dataset coverage and update date</summary>
       <p><strong id="dataset-count">—</strong> completed requests</p>
       <p><strong id="dataset-orgs">—</strong> institutions</p>
       <p id="dataset-dates">Loading coverage…</p>
       <p id="dataset-generated" hidden></p>
       <a href="https://open.canada.ca/data/dataset/0797e893-751e-4695-8229-a5066e4fe43c" target="_blank" rel="noopener">Government of Canada dataset ↗</a>
-    </aside>
+    </details>
   </div></section>
   <div class="wrap workbench">
     <section class="search-box" aria-label="Search records">
       <form id="search-form" role="search">
         <label for="query">Search summaries or request numbers</label>
-        <div class="input-row"><span class="search-icon" aria-hidden="true"></span><input id="query" type="search" placeholder='Try Shag Harbour, “real-time rail”, or A-2017-00532' autocomplete="off" spellcheck="false" maxlength="240" aria-describedby="search-help"><button id="clear-query" type="button" class="ghost" hidden>Clear</button></div>
+        <div class="input-row"><span class="search-icon" aria-hidden="true"></span><input id="query" type="search" enterkeyhint="search" placeholder='Try Shag Harbour, “real-time rail”, or A-2017-00532' autocomplete="off" spellcheck="false" maxlength="240" aria-describedby="search-help"><button type="submit" class="primary">Search</button><button id="clear-query" type="button" class="ghost" hidden>Clear</button></div>
       </form>
       <p id="search-help" class="muted hint">Use quotes for a phrase and a minus sign to exclude a word. Search includes English and French summaries.</p>
       <div id="suggestions" class="suggestions" aria-label="Suggested searches"></div>
